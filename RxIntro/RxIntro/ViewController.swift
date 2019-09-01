@@ -17,9 +17,10 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var counterLabel: UILabel!
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
+
         let subscription = fibSequence.subscribe { (event) in
             
             switch event {
@@ -35,7 +36,5 @@ class ViewController: UIViewController {
         }
         subscription.disposed(by: bag)
     }
-
-
 }
 
