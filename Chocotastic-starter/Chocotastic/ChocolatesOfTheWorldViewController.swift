@@ -33,7 +33,8 @@ import RxCocoa
 class ChocolatesOfTheWorldViewController: UIViewController {
   @IBOutlet private var cartButton: UIBarButtonItem!
   @IBOutlet private var tableView: UITableView!
-  let europeanChocolates = Chocolate.ofEurope
+  let europeanChocolates = Observable.just(Chocolate.ofEurope)
+  
   private let disposeBag = DisposeBag()
 }
 
@@ -43,7 +44,10 @@ extension ChocolatesOfTheWorldViewController {
     super.viewDidLoad()
     
     title = "Chocolate!!!"
+    
     setupCartObserver()
+    setUpCellObserver()
+    setupCellTapHandling()
   }
 }
 
@@ -59,6 +63,35 @@ private extension ChocolatesOfTheWorldViewController {
         self.cartButton.title = "\(chocolates.count) \u{1f36b}"
       })
       .disposed(by: disposeBag) //3 -  Disposes the subscription when deallocating the subscribing object
+  }
+  
+  func setUpCellObserver() {
+    
+    europeanChocolates
+      .bind(to: tableView // 1 - Associates the observable with the code that executes each row of the cell
+        .rx // 2 - Accesses RxCocoa for relevant classes - UITbleView in this case
+        .items(cellIdentifier: ChocolateCell.Identifier,
+               cellType: ChocolateCell.self)) { // 3 - Calls the dequeuereusable() method with id
+                
+                row, chocolate, cell in // 4 - Returns a callback with needed informations
+                cell.configureWithChocolate(chocolate: chocolate)
+    }
+    .disposed(by: disposeBag) // 5 - disposes the the observer
+  }
+  
+  func setupCellTapHandling() {
+    tableView
+      .rx
+      .modelSelected(Chocolate.self) //1 - Gets the proper type of the item passed in the param, returns Obs
+      .subscribe(onNext: { [unowned self] chocolate in // 2 - Returns the next value from observable
+        let newValue =  ShoppingCart.sharedCart.chocolates.value + [chocolate]
+        ShoppingCart.sharedCart.chocolates.accept(newValue) //3 - Use the accept method to update Observable
+        
+        if let selectedRowIndexPath = self.tableView.indexPathForSelectedRow {
+          self.tableView.deselectRow(at: selectedRowIndexPath, animated: true)
+        } //4 - Deselects the tap
+      })
+      .disposed(by: disposeBag) //5 - Adds the dispoable to the bag
   }
 
 }
