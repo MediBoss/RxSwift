@@ -45,8 +45,8 @@ extension ChocolatesOfTheWorldViewController {
     
     title = "Chocolate!!!"
     
-    setupCartObserver()
-    setUpCellObserver()
+    setupCartObservable()
+    setUpCellObservable()
     setupCellTapHandling()
   }
 }
@@ -54,18 +54,19 @@ extension ChocolatesOfTheWorldViewController {
 //MARK: - Rx Setup
 private extension ChocolatesOfTheWorldViewController {
   
-  func setupCartObserver() {
+  func setupCartObservable() {
     //1 - Sets the array of chocolates as observable
     ShoppingCart.sharedCart.chocolates.asObservable()
       
       .subscribe(onNext: { //2 -
         [unowned self] chocolates in
         self.cartButton.title = "\(chocolates.count) \u{1f36b}"
+        
       })
       .disposed(by: disposeBag) //3 -  Disposes the subscription when deallocating the subscribing object
   }
   
-  func setUpCellObserver() {
+  func setUpCellObservable() {
     
     europeanChocolates
       .bind(to: tableView // 1 - Associates the observable with the code that executes each row of the cell
