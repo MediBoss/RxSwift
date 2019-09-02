@@ -8,6 +8,7 @@
 
 import RxSwift
 import RxCocoa
+import RMessage
 import UIKit
 
 class HomeViewController: UIViewController {
@@ -17,6 +18,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var followingLabel: UILabel!
     @IBOutlet weak var mainTableView: UITableView!
     @IBOutlet weak var currentUserLabel: UILabel!
+    let rControl = RMController()
     
     // MARK: PROPERTIES
     private let _userObservableDisposeBag = DisposeBag()
@@ -55,7 +57,6 @@ extension HomeViewController {
         users
             .bind(to: mainTableView.rx
                 .items(cellIdentifier: HomeTableViewCell.cellID, cellType: HomeTableViewCell.self)) {
-                    
                     (row, user, cell) in
                         cell.configureCell(withUser: user)
             }
@@ -67,7 +68,6 @@ extension HomeViewController {
             .subscribe(onNext: { [unowned self] user in
                 
                 if let selectedRowIndexPath = self.mainTableView.indexPathForSelectedRow {
-                    
                     self.mainTableView.deselectRow(at: selectedRowIndexPath, animated: true)
                 }
                 
