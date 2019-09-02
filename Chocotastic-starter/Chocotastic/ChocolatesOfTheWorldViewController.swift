@@ -36,6 +36,7 @@ class ChocolatesOfTheWorldViewController: UIViewController {
   let europeanChocolates = Observable.just(Chocolate.ofEurope)
   
   private let disposeBag = DisposeBag()
+  let tapButton = UIButton()
 }
 
 //MARK: View Lifecycle
@@ -93,6 +94,13 @@ private extension ChocolatesOfTheWorldViewController {
         } //4 - Deselects the tap
       })
       .disposed(by: disposeBag) //5 - Adds the dispoable to the bag
+  }
+  
+  func setUpButtonTapHandling() {
+    
+    tapButton
+      .rx
+    
   }
 
 }
