@@ -89,16 +89,23 @@ class WeatherViewController: UIViewController {
   }
   
   private func updateUI(with weatherInfo: WeatherHelper.WeatherInfo) {
+    
     let tempMeasurement = Measurement(value: weatherInfo.main.temp, unit: UnitTemperature.kelvin)
     let formatter = MeasurementFormatter()
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .none
     formatter.numberFormatter = numberFormatter
     let tempStr = formatter.string(from: tempMeasurement)
-    self.tempLabel.text = tempStr
-    self.placeLabel.text = weatherInfo.name
-    self.conditionLabel.text = weatherInfo.weather.first?.description ?? "empty"
-    self.conditionLabel.textColor = UIColor.white
+    
+    DispatchQueue.main.async { [weak self] in
+      
+      guard let self = self else { return }
+      
+      self.tempLabel.text = tempStr
+      self.placeLabel.text = weatherInfo.name
+      self.conditionLabel.text = weatherInfo.weather.first?.description ?? "empty"
+      self.conditionLabel.textColor = UIColor.white
+    }
   }
   
   @IBAction func showRandomWeather(_ sender: AnyObject) {

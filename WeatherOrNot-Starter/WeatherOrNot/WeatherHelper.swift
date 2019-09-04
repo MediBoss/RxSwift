@@ -29,7 +29,7 @@
 import Foundation
 import PromiseKit
 
-private let appID = "<#Enter Your API Key from http://openweathermap.org/appid#>"
+private let appID = "8f7fa07c721b55e88e1d8383f84ad84b"
 
 class WeatherHelper {
   struct WeatherInfo: Codable {
