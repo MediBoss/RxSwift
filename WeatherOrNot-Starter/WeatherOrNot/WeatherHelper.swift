@@ -71,13 +71,16 @@ class WeatherHelper {
     let urlString = "http://api.openweathermap.org/data/2.5/weather?lat=" +
     "\(latitude)&lon=\(longitude)&appid=\(appID)"
     let url = URL(string: urlString)!
-    
 
-    return firstly {
-      URLSession.shared.dataTask(.promise, with: url)
-      }.compactMap {
-        return try JSONDecoder().decode(WeatherInfo.self, from: $0.data)
-    }
+    return
+      firstly {
+        URLSession.shared.dataTask(.promise, with: url)
+      }
+      .compactMap(on: DispatchQueue.global(qos: .background), {
+      
+        let decodedPromise = try JSONDecoder().decode(WeatherInfo.self, from: $0.data)
+        return decodedPromise
+    })
   }
 
 
