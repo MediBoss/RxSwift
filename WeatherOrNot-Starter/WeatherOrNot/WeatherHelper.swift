@@ -64,6 +64,23 @@ class WeatherHelper {
       completion(result, nil)
     }.resume()
   }
+
+  
+  func getWeather(atLatitude latitude: Double, longitude: Double ) -> Promise<WeatherInfo> {
+    
+    let urlString = "http://api.openweathermap.org/data/2.5/weather?lat=" +
+    "\(latitude)&lon=\(longitude)&appid=\(appID)"
+    let url = URL(string: urlString)!
+    
+
+    return firstly {
+      URLSession.shared.dataTask(.promise, with: url)
+      }.compactMap {
+        return try JSONDecoder().decode(WeatherInfo.self, from: $0.data)
+    }
+  }
+
+
   
   private func saveFile(named: String, data: Data, completion: @escaping (Error?) -> Void) {
     guard let path = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent(named+".png") else { return }
