@@ -27,7 +27,7 @@ class UserHelper {
   }
   
   
-  func signin() -> Promise<User> {
+  func signin(username: String, password: String) -> Promise<User> {
     
     let urlString = "https://api.lofti.com/signin"
     let url = URL(string: urlString)
@@ -54,13 +54,15 @@ class UserHelper {
     }
   }
   
-  
-  func doStuff() {
-    
-    signin().then { user in
-      fetchUserAvatar(fromUrl: user.profileImageUrl!).map { ($0, user) }
-      }.then {
-        print($0.1.name)
-    }
-  }
+//  func doStuff() {
+//
+//    let queue = DispatchQueue.main
+//    signin()
+//      .then { user in
+//        self.fetchUserAvatar(fromUrl: user.profileImageUrl!)
+//      }
+//      .done(on: queue) { avatar in
+//        self.imageView.image = avatar
+//      }
+//  }
 }
