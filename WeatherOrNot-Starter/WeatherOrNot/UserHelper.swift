@@ -21,11 +21,7 @@ struct User: Decodable {
 class UserHelper {
   
   static let shared = UserHelper()
-  
-  private func signin(username: String, password: String, completion: @escaping(User) -> ()) {
-    
-  }
-  
+
   
   func signin(username: String, password: String) -> Promise<User> {
     
@@ -35,8 +31,7 @@ class UserHelper {
     return firstly {
       URLSession.shared.dataTask(.promise, with: url!)
       }.compactMap {
-        let decodedUser = try JSONDecoder().decode(User.self, from: $0.data)
-        return decodedUser
+        return try JSONDecoder().decode(User.self, from: $0.data)
     }
   }
   
@@ -53,16 +48,4 @@ class UserHelper {
         UIImage(data: $0.data)
     }
   }
-  
-//  func doStuff() {
-//
-//    let queue = DispatchQueue.main
-//    signin()
-//      .then { user in
-//        self.fetchUserAvatar(fromUrl: user.profileImageUrl!)
-//      }
-//      .done(on: queue) { avatar in
-//        self.imageView.image = avatar
-//      }
-//  }
 }
